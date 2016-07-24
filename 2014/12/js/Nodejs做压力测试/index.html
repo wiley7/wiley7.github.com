@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Nodejs做压力测试 | Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了C++配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs做压力测试">
+<meta property="og:url" content="http://blog.geenow.com/2014/12/js/Nodejs做压力测试/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了C++配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。">
+<meta property="og:updated_time" content="2016-07-24T13:47:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs做压力测试">
+<meta name="twitter:description" content="之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了C++配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。">
+  
+    <link rel="alternative" href="/atom.xml" title="Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<div class="profilepic">
+			<img src="/favicon.png">
+		</div>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Icyleaf Ye</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">总得思考点什么吧</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/wiley7" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/1753056951" title="weibo">weibo</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud">
+						<a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/chrome-extension/" style="font-size: 10px;">chrome extension</a> <a href="/tags/cocos2dx/" style="font-size: 10px;">cocos2dx</a> <a href="/tags/gamedev/" style="font-size: 10px;">gamedev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/ios7/" style="font-size: 10px;">ios7</a> <a href="/tags/js/" style="font-size: 13.33px;">js</a> <a href="/tags/learning/" style="font-size: 13.33px;">learning</a> <a href="/tags/lua/" style="font-size: 13.33px;">lua</a> <a href="/tags/mongo/" style="font-size: 10px;">mongo</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/review/" style="font-size: 13.33px;">review</a> <a href="/tags/sys/" style="font-size: 13.33px;">sys</a> <a href="/tags/think/" style="font-size: 16.67px;">think</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/总结/" style="font-size: 16.67px;">总结</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a> <a href="/tags/项目管理/" style="font-size: 10px;">项目管理</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					又不是植物，总得思考点什么吧
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay"></div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="/favicon.png">
+			</div>
+
+			<hgroup>
+			  <h1 class="header-author"><a href="/">Icyleaf Ye</a></h1>
+			</hgroup>
+			
+			<p class="header-subtitle">总得思考点什么吧</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/wiley7" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/1753056951" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <article id="post-js/Nodejs做压力测试" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/12/js/Nodejs做压力测试/" class="article-date">
+  	<time datetime="2014-12-06T09:43:58.000Z" itemprop="datePublished">Dec 6 2014</time>
+</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/压力测试/">压力测试</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nodejs做压力测试
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了<code>C++</code>配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。<br><a id="more"></a></p>
+<h2 id="入门Nodejs"><a href="#入门Nodejs" class="headerlink" title="入门Nodejs"></a>入门Nodejs</h2><p>之前只是偶尔用过javascript写过网页上的动态效果，一直没有接触过Nodejs。于是网上找了点简单的<a href="http://nqdeng.github.io/7-days-nodejs/" target="_blank" rel="external">入门教程</a>。<br>方便的网络部分封装，可以直接关注测试本身：</p>
+<pre><code>var options = {
+hostname: &apos;www.example.com&apos;,
+port: 443,
+path: &apos;/&apos;,
+method: &apos;GET&apos;
+};
+var request = https.request(options, function (response) {});
+request.end();
+</code></pre><p>Nodejs自身异步编程的特性，可以同时处理多个请求。而且，还支持多进程<code>child_process</code>，<code>cluster</code>等。</p>
+<pre><code>function spawn(mainModule) {
+    var worker = child_process.spawn(&apos;node&apos;, [ mainModule ]);
+
+    worker.on(&apos;exit&apos;, function (code) {
+        if (code !== 0) {
+            spawn(mainModule);
+        }
+    });
+}
+spawn(&apos;worker.js&apos;);
+</code></pre><h2 id="编写单个测试机器人"><a href="#编写单个测试机器人" class="headerlink" title="编写单个测试机器人"></a>编写单个测试机器人</h2><p>使用回调处理，来达到顺序执行某一系列操作请求。从而模拟一个新玩家进入游戏的一系列操作。</p>
+<h2 id="批量启动机器人"><a href="#批量启动机器人" class="headerlink" title="批量启动机器人"></a>批量启动机器人</h2><h3 id="原生异步编程"><a href="#原生异步编程" class="headerlink" title="原生异步编程"></a>原生异步编程</h3><p>在进行测试之前，需要修改所使用的<code>http</code>的参数</p>
+<pre><code>http.globalAgent.maxSockets = 512;
+</code></pre><p>默认的同时存在的<code>socket</code>数目好像是5，在高并发请求下，直接进入排队，导致对服务器的压力上不来。之后，就直接启动<code>robot</code>。</p>
+<pre><code>for (var i = 0; i &lt; total; i++) {
+    var id = getRandId();
+    startRobot(id);
+}
+</code></pre><h3 id="使用child-process"><a href="#使用child-process" class="headerlink" title="使用child_process"></a>使用<code>child_process</code></h3><p>使用<code>child_process.spawn</code>来启动子进程，一个进程一个<code>robot</code></p>
+<pre><code>var total = 8;
+var child_process = require(&apos;child_process&apos;);
+function startRobot(id)
+{
+    var robot = child_process.spawn(&apos;node&apos;, [ &apos;robot.js&apos;, id ]);
+    robot.stdout.on(&apos;data&apos;, function (data) {
+        console.log(&apos;&apos; + data);
+    });
+    robot.stderr.on(&apos;data&apos;, function (data) {
+        console.log(&apos;err: &apos; + data);
+    });
+
+    robot.on(&apos;close&apos;, function (code) {
+        console.log(pid + &apos; &apos; + sec +&apos; finished&apos;);
+    });
+}
+
+for (var i = 0; i &lt; total; i++) {
+    var id = getRandId();
+    startRobot(id);
+}
+</code></pre><p>但这样对测试机本身压力很大，在total到一定数量，基本都不行了。</p>
+<h3 id="二者结合进行"><a href="#二者结合进行" class="headerlink" title="二者结合进行"></a>二者结合进行</h3><p>一个进程启动500个测试机器人，然后同时启动8个进程去运行。</p>
+<h1 id="Nodejs做压力测试"><a href="#Nodejs做压力测试" class="headerlink" title="Nodejs做压力测试"></a>Nodejs做压力测试</h1><p>之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了<code>C++</code>配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。</p>
+<h2 id="入门Nodejs-1"><a href="#入门Nodejs-1" class="headerlink" title="入门Nodejs"></a>入门Nodejs</h2><p>之前只是偶尔用过javascript写过网页上的动态效果，一直没有接触过Nodejs。于是网上找了点简单的<a href="http://nqdeng.github.io/7-days-nodejs/" target="_blank" rel="external">入门教程</a>。<br>方便的网络部分封装，可以直接关注测试本身：</p>
+<pre><code>var options = {
+hostname: &apos;www.example.com&apos;,
+port: 443,
+path: &apos;/&apos;,
+method: &apos;GET&apos;
+};
+var request = https.request(options, function (response) {});
+request.end();
+</code></pre><p>Nodejs自身异步编程的特性，可以同时处理多个请求。而且，还支持多进程<code>child_process</code>，<code>cluster</code>等。</p>
+<pre><code>function spawn(mainModule) {
+    var worker = child_process.spawn(&apos;node&apos;, [ mainModule ]);
+
+    worker.on(&apos;exit&apos;, function (code) {
+        if (code !== 0) {
+            spawn(mainModule);
+        }
+    });
+}
+spawn(&apos;worker.js&apos;);
+</code></pre><h2 id="编写单个测试机器人-1"><a href="#编写单个测试机器人-1" class="headerlink" title="编写单个测试机器人"></a>编写单个测试机器人</h2><p>使用回调处理，来达到顺序执行某一系列操作请求。从而模拟一个新玩家进入游戏的一系列操作。</p>
+<h2 id="批量启动机器人-1"><a href="#批量启动机器人-1" class="headerlink" title="批量启动机器人"></a>批量启动机器人</h2><h3 id="原生异步编程-1"><a href="#原生异步编程-1" class="headerlink" title="原生异步编程"></a>原生异步编程</h3><p>在进行测试之前，需要修改所使用的<code>http</code>的参数</p>
+<pre><code>http.globalAgent.maxSockets = 512;
+</code></pre><p>默认的同时存在的<code>socket</code>数目好像是5，在高并发请求下，直接进入排队，导致对服务器的压力上不来。之后，就直接启动<code>robot</code>。</p>
+<pre><code>for (var i = 0; i &lt; total; i++) {
+    var id = getRandId();
+    startRobot(id);
+}
+</code></pre><h3 id="使用child-process-1"><a href="#使用child-process-1" class="headerlink" title="使用child_process"></a>使用<code>child_process</code></h3><p>使用<code>child_process.spawn</code>来启动子进程，一个进程一个<code>robot</code></p>
+<pre><code>var total = 8;
+var child_process = require(&apos;child_process&apos;);
+function startRobot(id)
+{
+    var robot = child_process.spawn(&apos;node&apos;, [ &apos;robot.js&apos;, id ]);
+    robot.stdout.on(&apos;data&apos;, function (data) {
+        console.log(&apos;&apos; + data);
+    });
+    robot.stderr.on(&apos;data&apos;, function (data) {
+        console.log(&apos;err: &apos; + data);
+    });
+
+    robot.on(&apos;close&apos;, function (code) {
+        console.log(pid + &apos; &apos; + sec +&apos; finished&apos;);
+    });
+}
+
+for (var i = 0; i &lt; total; i++) {
+    var id = getRandId();
+    startRobot(id);
+}
+</code></pre><p>但这样对测试机本身压力很大，在total到一定数量，基本都不行了。</p>
+<h2 id="二者结合进行-1"><a href="#二者结合进行-1" class="headerlink" title="二者结合进行"></a>二者结合进行</h2><p>一个进程启动500个测试机器人，然后同时启动8个进程（CPU个数）去运行，会输出更大的测试压力。<br>入口：</p>
+<pre><code>var child_process = require(&apos;child_process&apos;);
+function runWorker(cnt) {
+    var worker = child_process.spawn(&apos;node&apos;, [ &apos;worker.js&apos;, cnt]);
+    worker.stdout.on(&apos;data&apos;, function (data) {
+        console.log(&apos;&apos; + data);
+    });
+    worker.stderr.on(&apos;data&apos;, function (data) {
+        console.log(&apos;err: &apos; + data);
+    });
+
+    worker.on(&apos;close&apos;, function (code) {
+        console.log(pid + &apos; &apos; + sec +&apos; finished&apos;);
+    });
+}
+var total = 8;
+var singleCnt = 100;
+for (var i = 0; i &lt; total; i++) {
+    runWorker(singleCnt);
+}
+</code></pre><p>worker：</p>
+<pre><code>var robot = require(&apos;./robot&apos;)
+function main(argv) {
+    if (argv.length &lt; 2) {
+        console.log(&apos;need params&apos;);
+        return;
+    }
+    var total = argv[0];
+    for (var i = 0; i &lt; total; i++) {
+        var id = getRandId();
+        var r = new robot(id);
+        r.run();
+    }
+}
+main(process.argv.slice(2));
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/12/sys/top命令显示/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          top命令显示
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/10/sys/2014-1-11-somecommands/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一些常用的命令</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Icyleaf Ye
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script src="/js/main.js"></script>
+
+  </div>
+</body>
+</html>
