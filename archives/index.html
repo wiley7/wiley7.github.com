@@ -99,7 +99,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud">
-						<a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/chrome-extension/" style="font-size: 10px;">chrome extension</a> <a href="/tags/cocos2dx/" style="font-size: 10px;">cocos2dx</a> <a href="/tags/gamedev/" style="font-size: 10px;">gamedev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/ios7/" style="font-size: 10px;">ios7</a> <a href="/tags/js/" style="font-size: 13.33px;">js</a> <a href="/tags/learning/" style="font-size: 13.33px;">learning</a> <a href="/tags/lua/" style="font-size: 13.33px;">lua</a> <a href="/tags/mongo/" style="font-size: 10px;">mongo</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/review/" style="font-size: 13.33px;">review</a> <a href="/tags/sys/" style="font-size: 13.33px;">sys</a> <a href="/tags/think/" style="font-size: 16.67px;">think</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/总结/" style="font-size: 16.67px;">总结</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a> <a href="/tags/项目管理/" style="font-size: 10px;">项目管理</a>
+						<a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/chrome-extension/" style="font-size: 10px;">chrome extension</a> <a href="/tags/cocos2dx/" style="font-size: 10px;">cocos2dx</a> <a href="/tags/gamedev/" style="font-size: 10px;">gamedev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/ios7/" style="font-size: 10px;">ios7</a> <a href="/tags/js/" style="font-size: 13.33px;">js</a> <a href="/tags/learning/" style="font-size: 13.33px;">learning</a> <a href="/tags/lua/" style="font-size: 13.33px;">lua</a> <a href="/tags/mongo/" style="font-size: 10px;">mongo</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/review/" style="font-size: 13.33px;">review</a> <a href="/tags/sys/" style="font-size: 13.33px;">sys</a> <a href="/tags/think/" style="font-size: 16.67px;">think</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/总结/" style="font-size: 16.67px;">总结</a> <a href="/tags/翻译/" style="font-size: 13.33px;">翻译</a> <a href="/tags/项目管理/" style="font-size: 10px;">项目管理</a>
 					</div>
 				</section>
 				
@@ -156,6 +156,62 @@
 	</div>
 </nav>
       
+  
+    <article id="post-translate/一份stackoverflow的事故报告" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/translate/一份stackoverflow的事故报告/" class="article-date">
+  	<time datetime="2016-07-26T09:16:39.000Z" itemprop="datePublished">Jul 26 2016</time>
+</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/翻译/">翻译</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/translate/一份stackoverflow的事故报告/">一份stackoverflow的事故报告</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>翻译自<a href="http://stackstatus.net/post/147710624694/outage-postmortem-july-20-2016" target="_blank" rel="external">Outage Postmortem - July 20, 2016</a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>2016年7月20日14：44分（UTC），我们(stackoverflow)经历了一场长达34分钟的服务中断。用了10分钟来定位问题，14分钟来写代码修复问题，最后又花了10分钟来上线修复代码，终于使得stackoverflow恢复了正常工作。</p>
+<p>错误的直接原因，是一个异常的post导致我们的正则表达式占用了过高的服务器CPU。正好这个post还位于首页上，使得每次的首页请求，都会触发这个如此CPU花费高昂的正则表达式，导致首页无法继续快速的响应。因为首页被用来作为负载均衡的安全检查使用，响应不及时导致负载均衡将节点从负载上摘下，导致整个网站就变得不可用了。</p>
+<h2 id="跟进"><a href="#跟进" class="headerlink" title="跟进"></a>跟进</h2><ul>
+<li>对各类情况进行正则表达式以及post校验审查</li>
+<li>对于负载均衡暂时禁用掉健康检查，因为我们相信在没有健康检查的情况下，除了首页，其他的页面都是可以正常工作的</li>
+<li>因为我们的 StackStatus Twitter的通知要比想象中的要晚，所以我们设立了一个“服务中断期间处理任务清单”（我们希望能更同步的处理别的中断流程[^foot]）<br>[^foot]:  and a few other outage workflow items we would like to be more consistent on</li>
+</ul>
+<h2 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h2><p>这个问题正则表达式是<code>^[\s\u200c]+|[\s\u200c]+$</code>，用来移除一行中unicode编码的空格。处理此类问题还有一个简单版本的正则<code>\s+$</code>,这个正则阅读起来要容易一些（“匹配字符串尾部所有的空格”），但是这也意味着会引起 <a href="https://msdn.microsoft.com/en-us/library/dsy130b4(v=vs.110" target="_blank" rel="external">正则引擎的回溯</a>.aspx)。那个异常的post，有一条评论，在”play happy sound for player to enjoy”后面，粗略估计，包含了20,000多个连续的空格字符。恩，这对我们来说，可是一点都不开心。</p>
+<p>如果要匹配的字符串包含了20,000多个连续空格，而且还不是在行的最末尾，这使得正则引擎，从第一个空格开始，检查它是否属于<code>\s</code>类的判断，然后到第二个空格，做相同的检查，以此类推。在20,000个空格之后，发现有一个不同的字符，但是目标匹配是要在行尾还是一个空格。在意识到这个不匹配之后，引擎会回溯到初始位置，然后从第二个空格开始，继续开始匹配<code>\s</code>，然后往下19,999个字符。恩，匹配又失败，引擎回溯，从第三个空格继续往下。<br>因此，正则引擎不得不执行“字符是否能匹配这个类”的检查（加一些额外的判断）20,000+19,999+19,998+…+3+2+1=199,990,000次。这需要花费很长时间。这虽然不是经典的灾难性回溯（<a href="https://vimeo.com/112065252" target="_blank" rel="external">talk on backtracking</a>）（时间复杂度是O(n²)，不是长度的指数级），但是也足够了。这个正则表达式最后被substring的方法所替代。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+
   
     <article id="post-translate/2016-7-24-项目延期" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -634,57 +690,6 @@ session.save_path  =/tmp/session     ; 文件路径
         
           <p class="article-more-link">
             <a href="/2014/12/sys/top命令显示/#more">more >></a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="post-js/Nodejs做压力测试" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/12/js/Nodejs做压力测试/" class="article-date">
-  	<time datetime="2014-12-06T09:43:58.000Z" itemprop="datePublished">Dec 6 2014</time>
-</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/压力测试/">压力测试</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/js/Nodejs做压力测试/">Nodejs做压力测试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>之前一直在考虑针对自己的服务端逻辑进行模拟机器人类压力测试。同时启动多个测试例子，模拟正常游戏玩家，进入游戏、走新手等。PHP首先被排除。考虑了<code>C++</code>配合lua的方式，或者Java等方式，但感觉开发成本会比较高，不适合现在的场景。看了别的项目使用了Nodejs做快速的压测，效果好些还不错，于是尝试了下使用Nodejs做。<br>
-        
-          <p class="article-more-link">
-            <a href="/2014/12/js/Nodejs做压力测试/#more">more >></a>
           </p>
         
       
