@@ -15,7 +15,7 @@
 <meta property="og:description" content="翻译自Outage Postmortem - July 20, 2016
 概述2016年7月20日14：44分（UTC），我们(stackoverflow)经历了一场长达34分钟的服务中断。用了10分钟来定位问题，14分钟来写代码修复问题，最后又花了10分钟来上线修复代码，终于使得stackoverflow恢复了正常工作。
 错误的直接原因，是一个异常的post导致我们的正则表达式占用了过高的服务器">
-<meta property="og:updated_time" content="2016-07-26T09:17:30.620Z">
+<meta property="og:updated_time" content="2016-07-26T09:21:03.090Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一份stackoverflow的事故报告">
 <meta name="twitter:description" content="翻译自Outage Postmortem - July 20, 2016
@@ -196,7 +196,7 @@
       
         <p>翻译自<a href="http://stackstatus.net/post/147710624694/outage-postmortem-july-20-2016" target="_blank" rel="external">Outage Postmortem - July 20, 2016</a></p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>2016年7月20日14：44分（UTC），我们(stackoverflow)经历了一场长达34分钟的服务中断。用了10分钟来定位问题，14分钟来写代码修复问题，最后又花了10分钟来上线修复代码，终于使得stackoverflow恢复了正常工作。</p>
-<p>错误的直接原因，是一个异常的post导致我们的正则表达式占用了过高的服务器CPU。正好这个post还位于首页上，使得每次的首页请求，都会触发这个如此CPU花费高昂的正则表达式，导致首页无法继续快速的响应。因为首页被用来作为负载均衡的安全检查使用，响应不及时导致负载均衡将节点从负载上摘下，导致整个网站就变得不可用了。</p>
+<p>错误的直接原因，是一个异常的post导致我们的正则表达式占用了过高的服务器CPU。正好这个post还位于首页上，使得每次的首页请求，都会触发这个如此CPU花费高昂的正则表达式，导致首页无法继续快速的响应。因为首页被用来作为负载均衡的安全检查使用，响应不及时导致负载均衡将节点从负载上摘下，导致整个网站就变得不可用了。<br><a id="more"></a></p>
 <h2 id="跟进"><a href="#跟进" class="headerlink" title="跟进"></a>跟进</h2><ul>
 <li>对各类情况进行正则表达式以及post校验审查</li>
 <li>对于负载均衡暂时禁用掉健康检查，因为我们相信在没有健康检查的情况下，除了首页，其他的页面都是可以正常工作的</li>
