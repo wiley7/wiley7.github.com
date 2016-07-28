@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="翻译自Project delays: why good software estimates are impossible
 你有没有曾经试图去还原一个魔方，折腾了一番，最终发现自己无法搞定么？有次在一个长途汽车旅途中，我尝试了几次，但每次的失败让人感觉自己好没用，特别是知道外面有些孩子能在几秒中内就给恢复好……这怎么可能！">
-<meta property="og:updated_time" content="2016-07-24T13:46:02.000Z">
+<meta property="og:updated_time" content="2016-07-28T02:33:04.470Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目延期：为什么准确预估软件开发周期是几乎不可能的">
 <meta name="twitter:description" content="翻译自Project delays: why good software estimates are impossible
@@ -106,7 +106,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud">
-						<a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/chrome-extension/" style="font-size: 10px;">chrome extension</a> <a href="/tags/cocos2dx/" style="font-size: 10px;">cocos2dx</a> <a href="/tags/gamedev/" style="font-size: 10px;">gamedev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/ios7/" style="font-size: 10px;">ios7</a> <a href="/tags/js/" style="font-size: 13.33px;">js</a> <a href="/tags/learning/" style="font-size: 13.33px;">learning</a> <a href="/tags/lua/" style="font-size: 13.33px;">lua</a> <a href="/tags/mongo/" style="font-size: 10px;">mongo</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/review/" style="font-size: 13.33px;">review</a> <a href="/tags/sys/" style="font-size: 13.33px;">sys</a> <a href="/tags/think/" style="font-size: 16.67px;">think</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/总结/" style="font-size: 16.67px;">总结</a> <a href="/tags/翻译/" style="font-size: 13.33px;">翻译</a> <a href="/tags/项目管理/" style="font-size: 10px;">项目管理</a>
+						<a href="/tags/algorithm/" style="font-size: 10px;">algorithm</a> <a href="/tags/chrome-extension/" style="font-size: 10px;">chrome extension</a> <a href="/tags/cocos2dx/" style="font-size: 10px;">cocos2dx</a> <a href="/tags/gamedev/" style="font-size: 10px;">gamedev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/ios7/" style="font-size: 10px;">ios7</a> <a href="/tags/js/" style="font-size: 13.33px;">js</a> <a href="/tags/learning/" style="font-size: 13.33px;">learning</a> <a href="/tags/lua/" style="font-size: 13.33px;">lua</a> <a href="/tags/mongo/" style="font-size: 10px;">mongo</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/review/" style="font-size: 13.33px;">review</a> <a href="/tags/sys/" style="font-size: 13.33px;">sys</a> <a href="/tags/think/" style="font-size: 16.67px;">think</a> <a href="/tags/压力测试/" style="font-size: 10px;">压力测试</a> <a href="/tags/总结/" style="font-size: 16.67px;">总结</a> <a href="/tags/管理/" style="font-size: 10px;">管理</a> <a href="/tags/翻译/" style="font-size: 16.67px;">翻译</a> <a href="/tags/项目管理/" style="font-size: 10px;">项目管理</a>
 					</div>
 				</section>
 				
@@ -197,7 +197,7 @@
       
         <p>翻译自<a href="http://chrismm.com/blog/project-delays-why-software-estimates/" target="_blank" rel="external">Project delays: why good software estimates are impossible</a></p>
 <p>你有没有曾经试图去还原一个魔方，折腾了一番，最终发现自己无法搞定么？有次在一个长途汽车旅途中，我尝试了几次，但每次的失败让人感觉自己好没用，特别是知道外面有些孩子能在几秒中内就给恢复好……这怎么可能！<br><a id="more"></a></p>
-<h2 id="未知复杂度"><a href="#未知复杂度" class="headerlink" title="未知复杂度"></a>未知复杂度</h2><p>作为一个程序员，当在开始一个新的项目的时候，我们通常是无法完全确定我们要具体怎么做的。但，我们是专业的，以前或多或少也做过一些类似的事情，所以，要么我们去尝试自己把它搞定，要么去咨询一些会的人，或者干脆google一下。<br>很多时候，我们根本不知道，我们会发现自己会处于窘境，直到它真的出现在面前。比如以下这些情况：  </p>
+<h2 id="未知复杂度"><a href="#未知复杂度" class="headerlink" title="未知复杂度"></a>未知复杂度</h2><p>作为一个程序员，当在开始一个新的项目的时候，我们通常是无法完全确定我们要具体怎么做的。但，我们是专业的，以前或多或少也做过一些类似的事情，所以，要么我们去尝试自己把它搞定，要么去咨询一些会的人，或者干脆google一下。<br>很多时候，我们根本不知道，我们会发现自己会处于窘境，直到它真的出现在面前。比如以下这些情况：</p>
 <ul>
 <li>使用新的框架或者新的库，去重新实现一些功能</li>
 <li>你准备去用的库，和你之前使用过的库并不相同</li>
@@ -211,6 +211,8 @@
 <h2 id="创造性工作-vs-机械性工作"><a href="#创造性工作-vs-机械性工作" class="headerlink" title="创造性工作 vs 机械性工作"></a>创造性工作 vs 机械性工作</h2><p>问题其实来自于那些需要更多思考的任务，和那些已经做过很多遍的常规任务之间的区别。<br>在 <a href="http://allankelly.blogspot.jp/2015/10/software-has-diseconomies-of-scale-not.html" target="_blank" rel="external">软件拥有规模不经济<a href="规模不经济，参考https://en.wikipedia.org/wiki/Diseconomies_of_scale">^footnote</a></a> 文中，对于上述两种在生产效率上的区别有个有意思的论点，对于创造性的任务，任务数量越多，每一个所花费的时间也就越多；而对于机械性的工作，却是相反的，在一定程度下它们能实现自动化。</p>
 <p>看上去，预估这些创造性任务的完成时间，是不太可能的，甚至于经验和熟练度都无法帮助到你。想象一下，问爱因斯坦，发现一个物理学上的统一理论需要花费多久，是什么感觉……</p>
 <p>在软件上，你能做的最好的，就是根据以前的历史数据来预估，当然，就像炒股一样，并不值得这么做。</p>
+<hr>
+<p><strong>简评</strong>:<br>虽然对于整个项目来说，直接预估完成时间是无法做到很精确的。但是对于单个任务，即使有5%的可能性预估出错，但是大部分情况下，还是能知道大致的完成时间的。要的不是精确估计，而是团队合作中，得让和你合作的同事，能预估你的进度，提前安排他们自己的计划。</p>
 
       
     </div>
