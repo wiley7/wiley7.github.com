@@ -32,7 +32,7 @@ hb.vm = {
                             m('h4', 'Your History'),
                         ]),
                         m('div', {class:"col-xs-5 col-md-offset-1", id: "cmparea"}, [
-                            m('h4', 'Other\'s History'),
+                            m('h4', 'My History'),
                         ]),
                     ]),
                 ]),
