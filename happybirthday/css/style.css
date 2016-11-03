@@ -1,0 +1,22 @@
+.conds {
+    text-align:center;
+}
+.origininfo {
+    float:left;
+    height:70%;
+    width:100%;
+    border:  1px solid;
+}
+.userdatainfo{
+    width: 100%;
+    height: 93%;
+    word-wrap:break-word;
+    background: #eee;
+    overflow-y:auto;
+    resize:none;
+}
+.header {
+    font-size:20px;
+}
+table {
+}
