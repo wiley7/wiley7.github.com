@@ -121,6 +121,13 @@ hb.vm = {
         setTimeout("hb.vm.doplay()", 100);
         //hb.vm.doplay();
         return m('div',{id: "step3area"}, [
+                m('br'),
+                m('br'),
+                m('label', "还记得刚刚玩的游戏吗？"),
+                m('br'),
+                m('br'),
+                m('br'),
+                m('br'),
                 m('div', {id:"container"}),
         ])
     },
